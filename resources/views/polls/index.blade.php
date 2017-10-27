@@ -8,6 +8,7 @@
         </div>
     @endif
 
+
     @foreach($polls as $pollObj)
             <div class="card mt-3 mb-5">
                 <h4 class="card-header">{{ $pollObj->name }}</h4>
@@ -27,8 +28,6 @@
                 </div>
             </div>
     @endforeach
-
-
 
 </div>
 @endsection

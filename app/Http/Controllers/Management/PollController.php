@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Management;
 use App\Poll;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+
 use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Support\Facades\Session;
 
 class PollController extends Controller
@@ -49,8 +51,8 @@ class PollController extends Controller
             'name' => $request->input('name'),
             'code' => uniqid(),
             'description' => $request->input('description'),
-            'public' => $request->input('public'),
-            'single_option' => $request->input('single_option'),
+            'public' => $request->input('public', false),
+            'single_option' => $request->input('single_option', false),
         ]);
 
         Session::flash('status', 'You successfully created poll ' . $pollObj->name . '.');
@@ -66,7 +68,11 @@ class PollController extends Controller
      */
     public function show($poll)
     {
-        //
+        $pollObj = Poll::where('code', $poll)->firstOrFail();
+
+        $totalVotes = $pollObj->votes()->count();
+
+        return view('management.polls.show', compact(['pollObj', 'totalVotes']));
     }
 
     /**
@@ -96,8 +102,8 @@ class PollController extends Controller
 
         $pollObj->name = $request->input('name');
         $pollObj->description = $request->input('description');
-        $pollObj->public = $request->input('public');
-        $pollObj->single_option = $request->input('single_option');
+        $pollObj->public = $request->input('public', false);
+        $pollObj->single_option = $request->input('single_option', false);
         $pollObj->save();
 
         Session::flash('status', 'You successfully updated poll ' . $pollObj->name . '.');

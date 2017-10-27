@@ -30,12 +30,16 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{ action('Management\PollController@index') }}">My polls</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Log out</a>
+                            <form action="{{route('logout')}}" method="post">
+                                {{ csrf_field() }}
+                                <button type="submit" class="dropdown-item">Logout</button>
+                            </form>
+
                         </div>
                     </li>
                 @else
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Log in</a>
+                        <a class="nav-link" href="{{ route('login') }}">Log in</a>
                     </li>
                 @endif
             </ul>

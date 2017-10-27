@@ -17,6 +17,7 @@ class PollController extends Controller
     public function index(){
         $polls = Poll::where('public', true)->get();
 
+
         return view('polls.index', compact(['polls']));
     }
 
