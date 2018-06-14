@@ -2,125 +2,73 @@
 
 namespace App\Http\Controllers\Management;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateOptionRequest;
+use App\Http\Requests\UpdateOptionRequest;
 use App\Option;
 use App\Poll;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class OptionController extends Controller
 {
-    public function __construct(){
-        $this->middleware('auth');
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            return optional($request->route('poll'))->user_id == Auth::user()->id ?
+                $next($request) :
+                abort(403);
+        });
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index($poll)
+    public function index(Poll $poll)
     {
-        $pollObj = Auth::user()->polls()->where('code', $poll)->firstOrFail();
-        $options = $pollObj->options;
-
-        return view('management.options.index', compact(['pollObj', 'options']));
+        $options = $poll->options;
+        return view('management.options.index', compact('poll', 'options'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create($poll)
+    public function create(Poll $poll)
     {
-        $pollObj = Auth::user()->polls()->where('code', $poll)->firstOrFail();
-
-        return view('management.options.create', compact(['pollObj']));
+        return view('management.options.create', compact('poll'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request, $poll)
+    public function store(CreateOptionRequest $request, Poll $poll)
     {
-        $pollObj = Auth::user()->polls()->where('code', $poll)->firstOrFail();
-
-        $optionObj = Option::create([
-            'poll_id' => $pollObj->id,
-            'name' => $request->input('name')
+        $option = Option::create([
+            'poll_id' => $poll->id,
+            'name'    => $request->name
         ]);
 
-
-        Session::flash('status', 'You successfully created option `' . $optionObj->name . '` from poll `' . $pollObj->name . '`.');
-
-        return redirect(action('Management\OptionController@index', $pollObj->code));
+        Session::flash('status', 'You successfully created option `' . $option->name . '` from poll `' . $poll->name . '`.');
+        return redirect(action('Management\OptionController@index', $poll->code));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($poll, $id)
+    public function show(Poll $poll, $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($poll, $id)
+    public function edit(Poll $poll, $id)
     {
-        $pollObj = Auth::user()->polls()->where('code', $poll)->firstOrFail();
-        $optionObj = $pollObj->options()->findOrFail($id);
-
-        return view('management.options.edit', compact(['pollObj', 'optionObj']));
+        $option = $poll->options()->findOrFail($id);
+        return view('management.options.edit', compact('poll', 'option'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $poll, $id)
+    public function update(UpdateOptionRequest $request, Poll $poll, $id)
     {
-        $pollObj = Auth::user()->polls()->where('code', $poll)->firstOrFail();
-        $optionObj = $pollObj->options()->findOrFail($id);
+        $option = $poll->options()->findOrFail($id);
+        $option->update(['name' => $request->name]);
 
-        $optionObj->name = $request->input('name');
-        $optionObj->save();
-
-        Session::flash('status', 'You successfully updated option `' . $optionObj->name . '` from poll `' . $pollObj->name . '`.');
-
-        return redirect(action('Management\OptionController@index', $pollObj->code));
+        Session::flash('status', 'You successfully updated option `' . $option->name . '` from poll `' . $poll->name . '`.');
+        return redirect(action('Management\OptionController@index', $poll->code));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($poll, $id)
+    public function destroy(Poll $poll, $id)
     {
-        $pollObj = Auth::user()->polls()->where('code', $poll)->firstOrFail();
-        $optionObj = $pollObj->options()->findOrFail($id);
-        $optionObj->delete();
+        $option = $poll->options()->findOrFail($id);
+        $option->delete();
 
-
-        Session::flash('status', 'You successfully removed option `' . $optionObj->name . '` from poll `' . $pollObj->name . '`.');
-
+        Session::flash('status', 'You successfully removed option from poll `' . $poll->name . '`.');
         return redirect(action('Management\OptionController@index', $poll));
     }
 }

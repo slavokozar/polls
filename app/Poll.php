@@ -21,19 +21,35 @@ class Poll extends Model
      */
     protected $fillable = [
         'user_id',
-        'code', 'name', 'description',
-        'public','single_option'
+        'code',
+        'name',
+        'description',
+        'public',
+        'single_option'
     ];
 
-    public function user(){
+    public function getRouteKeyName()
+    {
+        return 'code';
+    }
+
+    public function user()
+    {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function options(){
+    public function options()
+    {
         return $this->hasMany(Option::class, 'poll_id');
     }
 
-    public function votes(){
+    public function votes()
+    {
         return $this->hasMany(Vote::class, 'poll_id');
+    }
+
+    public function scopePublic($query)
+    {
+        return $query->where('public', true);
     }
 }

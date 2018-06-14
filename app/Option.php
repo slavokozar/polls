@@ -24,7 +24,8 @@ class Option extends Model
         'name'
     ];
 
-    public function survey(){
+    public function survey()
+    {
         return $this->belongsTo(Poll::class, 'poll_id');
     }
 }
