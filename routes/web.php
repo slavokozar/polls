@@ -29,10 +29,10 @@ Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 Route::get('/', 'HomeController@index');
 
 Route::get('/polls', 'PollController@index');
-Route::get('/polls/{poll}', 'PollController@show');
 
 Route::group(['middleware' => ['auth']], function () {
 
+    Route::get('/polls/{poll}', 'PollController@show');
     Route::post('/polls/{poll}', 'PollController@vote');
 
     Route::get('/manage/polls', 'Management\PollController@index');

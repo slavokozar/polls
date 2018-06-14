@@ -17,7 +17,7 @@ class OptionController extends Controller
         $this->middleware(function ($request, $next) {
             return optional($request->route('poll'))->user_id == Auth::user()->id ?
                 $next($request) :
-                abort(403);
+                redirect()->action('Management\PollController@index');
         });
     }
 

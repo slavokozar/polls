@@ -18,7 +18,7 @@ class PollSeeder extends Seeder
         $faker = Faker::create();
         $user  = User::first();
 
-        foreach (range(1, 10) as $_) {
+        foreach (range(1, 20) as $_) {
             $poll = Poll::create([
                 'user_id'       => $user->id,
                 'code'          => uniqid(),

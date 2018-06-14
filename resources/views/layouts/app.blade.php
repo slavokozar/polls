@@ -45,7 +45,7 @@
             </ul>
         </nav>
 
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="{{ action('HomeController@index') }}">
             Bootcamp Polls
         </a>
     </header>

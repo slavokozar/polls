@@ -16,13 +16,13 @@ class PollController extends Controller
         $this->middleware(function ($request, $next) {
             return optional($request->route('poll'))->user_id == Auth::user()->id ?
                 $next($request) :
-                abort(403);
+                redirect()->action('Management\PollController@index');
         })->except(['index', 'create', 'store']);
     }
 
     public function index()
     {
-        $polls = Auth::user()->polls;
+        $polls = Auth::user()->polls()->paginate(5);
         return view('management.polls.index', compact('polls'));
     }
 
