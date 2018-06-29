@@ -21,8 +21,11 @@ class Poll extends Model
      */
     protected $fillable = [
         'user_id',
-        'code', 'name', 'description',
-        'public','single_option'
+        'code',
+        'name',
+        'description',
+        'public',
+        'single_option'
     ];
 
     public function user(){

@@ -25,7 +25,11 @@
                         <td>{{ $pollObj->name }}</td>
                         <td>{{ $pollObj->code }}</td>
                         <td class="text-right">
-                            <a href="{{ action('Management\PollController@show', $pollObj->code) }}" class="btn btn-info">Results <span class="badge badge-light">{{ count($pollObj->votes) }}</span></a>
+                            <a href="{{ action('Management\PollController@show', $pollObj->code) }}" class="btn btn-info">
+
+                                Results <span class="badge badge-light">{{ count($pollObj->votes) }}</span>
+
+                            </a>
 
                             <a href="{{ action('Management\OptionController@index', $pollObj->code) }}" class="btn btn-primary">Options</a>
 

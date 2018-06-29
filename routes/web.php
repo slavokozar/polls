@@ -17,7 +17,6 @@ Route::get('/polls', 'PollController@index');
 Route::get('/polls/{poll}', 'PollController@show');
 Route::post('/polls/{poll}', 'PollController@vote');
 
-
 Route::get('/manage/polls', 'Management\PollController@index');
 Route::get('/manage/polls/create', 'Management\PollController@create');
 Route::post('/manage/polls', 'Management\PollController@store');
@@ -33,9 +32,6 @@ Route::get('/manage/polls/{poll}/options/{option}', 'Management\OptionController
 Route::get('/manage/polls/{poll}/options/{option}/edit', 'Management\OptionController@edit');
 Route::put('/manage/polls/{poll}/options/{option}', 'Management\OptionController@update');
 Route::delete('/manage/polls/{poll}/options/{option}', 'Management\OptionController@destroy');
-
-
-
 
 
 Auth::routes();

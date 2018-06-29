@@ -11,12 +11,11 @@ use Illuminate\Support\Facades\Session;
 class PollController extends Controller
 {
     public function __construct(){
-        $this->middleware('auth')->except(['show','vode']);
+        $this->middleware('auth')->except(['show','vote']);
     }
 
     public function index(){
         $polls = Poll::where('public', true)->get();
-
 
         return view('polls.index', compact(['polls']));
     }
@@ -50,6 +49,6 @@ class PollController extends Controller
         Session::flash('status', 'You successfully voted in '.$pollObj->name.'.');
 
 
-        return redirect(action('PollController@vote', $poll));
+        return redirect(action('PollController@show', $poll));
     }
 }
