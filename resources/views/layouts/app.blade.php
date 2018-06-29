@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -7,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Narrow Jumbotron Template for Bootstrap</title>
+    <title>Bootcamp polls</title>
 
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
@@ -24,7 +23,8 @@
                 </li>
                 @if(Auth::check())
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
                             {{ Auth::user()->name }}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -45,10 +45,12 @@
             </ul>
         </nav>
 
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="{{ action('HomeController@index') }}">
             Bootcamp Polls
         </a>
     </header>
+
+    @include('partials.errors')
 
     <main role="main">
 
@@ -57,7 +59,7 @@
     </main>
 
     <footer class="footer">
-        <p>&copy; Data4You.cz, CodingBootcamp, Slavo Kozar 2017</p>
+        <p>&copy; Data4You.cz, CodingBootcamp, 2018</p>
     </footer>
 
     <script src="{{ asset('js/jquery.min.js') }}"></script>

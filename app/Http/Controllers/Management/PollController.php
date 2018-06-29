@@ -2,128 +2,79 @@
 
 namespace App\Http\Controllers\Management;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\CreatePollRequest;
 use App\Poll;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-
 use Illuminate\Support\Facades\Auth;
-
 use Illuminate\Support\Facades\Session;
 
 class PollController extends Controller
 {
-    public function __construct(){
-        $this->middleware('auth');
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            return optional($request->route('poll'))->user_id == Auth::user()->id ?
+                $next($request) :
+                redirect()->action('Management\PollController@index');
+        })->except(['index', 'create', 'store']);
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        $polls = Auth::user()->polls;
-
-        return view('management.polls.index', compact(['polls']));
+        $polls = Auth::user()->polls()->paginate(5);
+        return view('management.polls.index', compact('polls'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('management.polls.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(CreatePollRequest $request)
     {
-        $pollObj = Poll::create([
-            'user_id' => Auth::user()->id,
-            'name' => $request->input('name'),
-            'code' => uniqid(),
-            'description' => $request->input('description'),
-            'public' => $request->input('public', false),
-            'single_option' => $request->input('single_option', false),
+        $poll = Poll::create([
+            'user_id'       => Auth::user()->id,
+            'name'          => $request->name,
+            'code'          => uniqid(),
+            'description'   => $request->description,
+            'public'        => $request->public ?? false,
+            'single_option' => $request->single_option ?? false,
         ]);
 
-        Session::flash('status', 'You successfully created poll ' . $pollObj->name . '.');
-
+        Session::flash('status', 'You successfully created poll ' . $poll->name . '.');
         return redirect(action('Management\PollController@index'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($poll)
+    public function show(Poll $poll)
     {
-        $pollObj = Poll::where('code', $poll)->firstOrFail();
-
-        $totalVotes = $pollObj->votes()->count();
-
-        return view('management.polls.show', compact(['pollObj', 'totalVotes']));
+        $totalVotes = $poll->votes()->count();
+        return view('management.polls.show', compact('poll', 'totalVotes'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($poll)
+    public function edit(Poll $poll)
     {
-        $pollObj = Poll::where('code', $poll)->firstOrFail();
-
-
-        return view('management.polls.edit', compact(['pollObj']));
+        return view('management.polls.edit', compact('poll'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $poll)
+    public function update(Request $request, Poll $poll)
     {
-        $pollObj = Poll::where('code', $poll)->firstOrFail();
+        $poll->update([
+            'name'          => $request->name,
+            'description'   => $request->description,
+            'public'        => $request->public ?? false,
+            'single_option' => $request->single_option ?? false
+        ]);
 
-        $pollObj->name = $request->input('name');
-        $pollObj->description = $request->input('description');
-        $pollObj->public = $request->input('public', false);
-        $pollObj->single_option = $request->input('single_option', false);
-        $pollObj->save();
-
-        Session::flash('status', 'You successfully updated poll ' . $pollObj->name . '.');
-
+        Session::flash('status', 'You successfully updated poll ' . $poll->name . '.');
         return redirect(action('Management\PollController@index'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($poll)
+    public function destroy(Poll $poll)
     {
-        $pollObj = Poll::where('code', $poll)->firstOrFail();
-        $pollObj->delete();
+        $poll->delete();
 
-        Session::flash('status', 'You successfully removed poll ' . $pollObj->name . '.');
-
+        Session::flash('status', 'You successfully removed poll.');
         return redirect(action('Management\PollController@index'));
     }
 }

@@ -8,24 +8,24 @@
             </div>
         @endif
 
-        <h1>Poll `{{ $pollObj->name }}` options</h1>
+        <h1>Poll `{{ $poll->name }}` options</h1>
         <table class="table">
             <thead>
             <tr>
                 <th scope="col">name</th>
                 <th scope="col" class="text-right">
-                    <a href="{{ action('Management\OptionController@create', $pollObj->code) }}" class="btn btn-info">New Option</a>
+                    <a href="{{ action('Management\OptionController@create', $poll->code) }}" class="btn btn-info">New Option</a>
                 </th>
             </tr>
             </thead>
             <tbody>
-            @foreach($options as $optionObj)
+            @foreach($options as $option)
                 <tr>
-                    <td>{{ $optionObj->name }}</td>
+                    <td>{{ $option->name }}</td>
                     <td class="text-right">
-                        <a href="{{ action('Management\OptionController@edit', [$pollObj->code, $optionObj->id]) }}" class="btn btn-warning">Edit</a>
+                        <a href="{{ action('Management\OptionController@edit', [$poll->code, $option->id]) }}" class="btn btn-warning">Edit</a>
 
-                        <form style="display: inline-block" method="post" action="{{ action('Management\OptionController@destroy', [$pollObj->code, $optionObj->id]) }}">
+                        <form style="display: inline-block" method="post" action="{{ action('Management\OptionController@destroy', [$poll->code, $option->id]) }}">
                             <input type="hidden" name="_method" value="delete"/>
                             {!! csrf_field() !!}
                             <button type="submit" class="btn btn-danger">Delete</button>

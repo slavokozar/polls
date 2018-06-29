@@ -8,9 +8,9 @@
             </div>
         @endif
 
-        <h1>Create Option for `{{$pollObj->name}}`</h1>
+        <h1>Create Option for `{{$poll->name}}`</h1>
 
-        <form action="{{ action('Management\OptionController@store', $pollObj->code) }}" method="post">
+        <form action="{{ action('Management\OptionController@store', $poll->code) }}" method="post">
             {!! csrf_field() !!}
             <div class="form-group">
                 <label>Name</label>

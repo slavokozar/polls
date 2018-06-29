@@ -8,28 +8,29 @@
             </div>
         @endif
 
-        <h1>Edit `{{ $pollObj->name }}` Poll</h1>
+        <h1>Edit `{{ $poll->name }}` Poll</h1>
 
-        <form action="{{ action('Management\PollController@update', $pollObj->code) }}" method="post">
+        <form action="{{ action('Management\PollController@update', $poll->code) }}" method="post">
             {!! csrf_field() !!}
-            <input type="hidden" name="_method" value="PUT" />
+            <input type="hidden" name="_method" value="PUT"/>
             <div class="form-group">
                 <label>Name</label>
-                <input type="text" class="form-control" name="name" value="{{ $pollObj->name }}">
+                <input type="text" class="form-control" name="name" value="{{ $poll->name }}">
             </div>
             <div class="form-group">
                 <label>Description</label>
-                <textarea class="form-control" name="description">{{ $pollObj->description }}</textarea>
+                <textarea class="form-control" name="description">{{ $poll->description }}</textarea>
             </div>
             <div class="form-check">
                 <label class="form-check-label">
-                    <input type="checkbox" class="form-check-input" name="public"{{ $pollObj->public ? ' checked' : '' }}>
+                    <input type="checkbox" class="form-check-input" name="public"{{ $poll->public ? ' checked' : '' }}>
                     Public poll
                 </label>
             </div>
             <div class="form-check">
                 <label class="form-check-label">
-                    <input type="checkbox" class="form-check-input" name="single_option"{{ $pollObj->single_option ? ' checked' : '' }}>
+                    <input type="checkbox" class="form-check-input"
+                           name="single_option"{{ $poll->single_option ? ' checked' : '' }}>
                     Single option poll
                 </label>
             </div>

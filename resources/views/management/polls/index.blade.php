@@ -46,7 +46,7 @@
             </tbody>
         </table>
 
-
+        {{ $polls->render() }}
 
     </div>
 @endsection

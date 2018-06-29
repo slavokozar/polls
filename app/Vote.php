@@ -26,15 +26,18 @@ class Vote extends Model
     ];
 
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function poll(){
+    public function poll()
+    {
         return $this->belongsTo(Poll::class, 'survey_id');
     }
 
-    public function option(){
+    public function option()
+    {
         return $this->belongsTo(Option::class, 'option_id');
     }
 }

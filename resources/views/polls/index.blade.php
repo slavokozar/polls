@@ -29,5 +29,7 @@
             </div>
     @endforeach
 
+    {{ $polls->render() }}
+
 </div>
 @endsection
